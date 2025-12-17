@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+
+# Camera images
+frame.jpg
+test.jpg
+detected_*.jpg
+
+# YOLO runs
+runs/
+
+# OS files
+.DS_Store
