@@ -76,5 +76,5 @@ try:
         time.sleep(CAPTURE_DELAY)
 
 except KeyboardInterrupt:
-    print("\n🛑 Stopped by user (camera released)")
+    print("\nStopped by user (camera released)")
     os.system("pkill -f rpicam-still")
