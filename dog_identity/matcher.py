@@ -22,7 +22,7 @@ print("[INFO] Loaded dog identities:", list(known_embeddings.keys()))
 # ---------------------------
 # Identify dog
 # ---------------------------
-def identify_dog(face_img, threshold=0.80):
+def identify_dog(face_img, threshold=0.63):
     """
     face_img: cropped RGB image of dog face
     returns: dog name or 'unknown'
@@ -34,11 +34,13 @@ def identify_dog(face_img, threshold=0.80):
 
     for name, emb_list in known_embeddings.items():
         score = cosine_similarity(test_emb, emb_list).max()
+        print(f"[SIM] {name}: {score:.3f}")
+
         if score > best_score:
             best_score = score
             best_match = name
 
     if best_score >= threshold:
-        return best_match
+        return best_match,best_score
     else:
-        return "unknown"
+        return "unknown", best_score
