@@ -1,26 +1,61 @@
-import pigpio
-import time
+from gpiozero import Servo
+from time import sleep, time
 
-SERVO_PIN = 18  # GPIO18 (Pin 12)
+# ================= CONFIG =================
+SERVO_PIN = 18          # GPIO 18 (PWM)
+OPEN_TIME = 1.2         # seconds servo stays open
+COOLDOWN = 30           # seconds between feeds
 
-pi = pigpio.pi()
-if not pi.connected:
-    raise RuntimeError("❌ pigpio daemon not running")
+# Servo pulse widths (calibrate if needed)
+MIN_PW = 0.5 / 1000     # closed
+MAX_PW = 2.5 / 1000     # open
 
-def open_feeder():
-    """
-    Rotate servo to OPEN position
-    """
-    pi.set_servo_pulsewidth(SERVO_PIN, 1500)  # ~90 degrees
-    print("🔓 Feeder OPEN")
+# ==========================================
 
-def close_feeder():
-    """
-    Rotate servo to CLOSED position
-    """
-    pi.set_servo_pulsewidth(SERVO_PIN, 500)   # ~0 degrees
-    print("🔒 Feeder CLOSED")
+servo = Servo(
+    SERVO_PIN,
+    min_pulse_width=MIN_PW,
+    max_pulse_width=MAX_PW
+)
 
-def cleanup():
-    pi.set_servo_pulsewidth(SERVO_PIN, 0)
-    pi.stop()
+last_feed_time = 0
+
+
+def dispense_food():
+    global last_feed_time
+
+    now = time()
+    if now - last_feed_time < COOLDOWN:
+        print("⏳ Cooldown active — skipping feed")
+        return
+
+    print("🍖 Dispensing food...")
+    servo.max()          # open
+    sleep(OPEN_TIME)
+    servo.min()          # close
+    sleep(0.3)
+
+    servo.detach()       # 🔥 stop jitter
+    last_feed_time = now
+
+    print("✅ Feeding complete")
+
+
+# ================= TEST LOOP =================
+if __name__ == "__main__":
+    print("NomNomNom Servo Controller Ready 🐶")
+
+    try:
+        while True:
+            cmd = input("Press ENTER to feed (q to quit): ")
+            if cmd.lower() == "q":
+                break
+
+            dispense_food()
+
+    except KeyboardInterrupt:
+        pass
+
+    finally:
+        servo.detach()
+        print("\n🛑 Servo safely stopped")
