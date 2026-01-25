@@ -1,0 +1,20 @@
+import time
+from hx711 import HX711
+
+# GPIO pins (BCM numbering)
+DT = 5
+SCK = 6
+
+hx = HX711(dout_pin=DT, pd_sck_pin=SCK)
+
+# Reset & tare
+hx.reset()
+hx.tare()
+
+print("HX711 ready. Place weight..hx.power_down()
+        hx.power_up()
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    print("Exiting...")
