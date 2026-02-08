@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nom Nom Feeder Dashboard</title>
+
+    <meta http-equiv="refresh" content="5">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📊 Nom Nom Pet Feeder Dashboard</h1>
+
+<div class="card">
+    <h3>🐶 Last Fed Dog</h3>
+    {% if last_feed %}
+        <p><b>Name:</b> {{ last_feed[0] }}</p>
+        <p><b>Time:</b> {{ last_feed[1] }}</p>
+        <p><b>Portion:</b> {{ last_feed[2] }} grams</p>
+    {% else %}
+        <p>No feeding data yet</p>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h3>📈 Feedings Today</h3>
+    <p><b>{{ today_count }}</b></p>
+</div>
+
+<h2>📜 Feeding History</h2>
+
+<table>
+    <tr>
+        <th>Dog</th>
+        <th>Entry Time</th>
+        <th>Exit Time</th>
+        <th>Food (g)</th>
+    </tr>
+
+    {% for log in logs %}
+    <tr>
+        <td>{{ log[0] }}</td>
+        <td>{{ log[1] }}</td>
+        <td>{{ log[2] }}</td>
+        <td>{{ log[3] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>
