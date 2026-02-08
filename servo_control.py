@@ -1,26 +1,18 @@
-import pigpio
+import RPi.GPIO as GPIO
 import time
 
-SERVO_PIN = 18  # GPIO18 (Pin 12)
+SERVO_PIN = 18
 
-pi = pigpio.pi()
-if not pi.connected:
-    raise RuntimeError("❌ pigpio daemon not running")
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(SERVO_PIN, GPIO.OUT)
 
-def open_feeder():
-    """
-    Rotate servo to OPEN position
-    """
-    pi.set_servo_pulsewidth(SERVO_PIN, 1500)  # ~90 degrees
-    print("🔓 Feeder OPEN")
+pwm = GPIO.PWM(SERVO_PIN, 50)
+pwm.start(0)
 
-def close_feeder():
-    """
-    Rotate servo to CLOSED position
-    """
-    pi.set_servo_pulsewidth(SERVO_PIN, 500)   # ~0 degrees
-    print("🔒 Feeder CLOSED")
+def open_servo():
+    pwm.ChangeDutyCycle(7.5)  # adjust angle if needed
+    time.sleep(0.5)
 
-def cleanup():
-    pi.set_servo_pulsewidth(SERVO_PIN, 0)
-    pi.stop()
+def close_servo():
+    pwm.ChangeDutyCycle(2.5)
+    time.sleep(0.5)
